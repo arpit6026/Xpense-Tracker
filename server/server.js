@@ -23,7 +23,14 @@ app.use(cors({
         // Normalize origin by removing trailing slashes
         const cleanOrigin = origin.replace(/\/$/, "");
         
-        if (allowedOrigins.includes(cleanOrigin) || allowedOrigins.includes("*")) {
+        // Check if origin is allowed
+        const isAllowed = 
+            allowedOrigins.includes(cleanOrigin) || 
+            allowedOrigins.includes("*") ||
+            cleanOrigin.endsWith(".vercel.app") || // Allow all Vercel domains/previews
+            cleanOrigin.startsWith("http://localhost:"); // Allow localhost on any port
+        
+        if (isAllowed) {
             return callback(null, true);
         }
         
